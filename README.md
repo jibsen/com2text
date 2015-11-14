@@ -21,11 +21,14 @@ to only contain x86 opcodes that happen to be text characters.
 There were a number of such tools around, and I wrote this one just to see
 how it was done.
 
+Recently someone requested a decoder, so I dug out the source and wrote one,
+and figured I might as well put the source on GitHub.
+
 
 Usage
 -----
 
-You can assemble the sources using [NASM](http://www.nasm.us/):
+You can assemble the encoder sources using [NASM](http://www.nasm.us/):
 
     nasm c2t1.asm -fbin -o c2t1.com
     nasm c2t2.asm -fbin -o c2t2.com
