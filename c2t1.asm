@@ -21,16 +21,11 @@
 ; Note: Yes, I know this code is realy ugly -- it was just hacked
 ;       together to do the job :-)
 
-code segment byte public
-assume cs:code, ds:code, es:code
-
-.386
-
 org 100h
 
 start:
         mov     ah, 9
-        mov     dx, offset intro
+        mov     dx, intro
         int     21h
 
         mov     ah, 4ah
@@ -56,7 +51,7 @@ findend:
 
         mov     ax, 3d02h
         xor     cx, cx
-        mov     byte ptr [si - 1], cl   ; zero terminate filename
+        mov     [si - 1], cl            ; zero terminate filename
 
         int     21h                     ; open file (read/write)
         jc      _open_error             ; open error?
@@ -66,7 +61,7 @@ findend:
 ; ===================================================================
 ;  read file
 ; ===================================================================
-        mov     dx, offset buffer
+        mov     dx, buffer
         mov     di, dx
 
         mov     cx, 07f00h
@@ -77,10 +72,10 @@ findend:
         cmp     ax, cx
         je      _format_error           ; format error?
 
-        cmp     word ptr [di], 'MZ'
+        cmp     word [di], 'MZ'
         je      _format_error           ; format error?
 
-        cmp     word ptr [di], 'ZM'
+        cmp     word [di], 'ZM'
         je      _format_error           ; format error?
 
 ; ===================================================================
@@ -90,12 +85,12 @@ findend:
         add     dh, 10h
         mov     es, dx                  ; es -> next segment
 
-        mov     si, offset handler
+        mov     si, handler
         mov     cx, HANDLER_SIZE
         xor     di, di
         rep     movsb                   ; copy handler
 
-        mov     si, offset buffer
+        mov     si, buffer
         xchg    ax, cx                  ; cx = filesize
 
         mov     dx, di                  ; initialize counter
@@ -202,7 +197,3 @@ handler:
 HANDLER_SIZE equ $ - handler
 
 buffer:
-
-code ends
-
-end start

@@ -21,16 +21,11 @@
 ; Note: Yes, I know this code is realy ugly -- it was just hacked
 ;       together to do the job :-)
 
-code segment byte public
-assume cs:code, ds:code, es:code
-
-.386
-
 org 100h
 
 start:
         mov     ah, 9
-        mov     dx, offset intro
+        mov     dx, intro
         int     21h
 
         mov     ah, 4ah
@@ -56,7 +51,7 @@ findend:
 
         mov     ax, 3d02h
         xor     cx, cx
-        mov     byte ptr [si - 1], cl   ; zero terminate filename
+        mov     [si - 1], cl            ; zero terminate filename
 
         int     21h                     ; open file (read/write)
         jc      _open_error             ; open error?
@@ -66,7 +61,7 @@ findend:
 ; ===================================================================
 ;  read file
 ; ===================================================================
-        mov     dx, offset buffer
+        mov     dx, buffer
         mov     di, dx
 
         mov     cx, 07f00h
@@ -77,10 +72,10 @@ findend:
         cmp     ax, cx
         je      _format_error           ; format error?
 
-        cmp     word ptr [di], 'MZ'
+        cmp     word [di], 'MZ'
         je      _format_error           ; format error?
 
-        cmp     word ptr [di], 'ZM'
+        cmp     word [di], 'ZM'
         je      _format_error           ; format error?
 
 ; ===================================================================
@@ -90,12 +85,12 @@ findend:
         add     dh, 10h
         mov     es, dx                  ; es -> next segment
 
-        mov     si, offset handler
+        mov     si, handler
         mov     cx, HANDLER_SIZE
         xor     di, di
         rep     movsb                   ; copy handler
 
-        mov     si, offset buffer
+        mov     si, buffer
         xchg    ax, cx                  ; cx = filesize
 
         lea     dx, [di-2]              ; initialize counter
@@ -103,7 +98,7 @@ findend:
         mov     bp, di                  ; bp -> first 'dx'
         inc     di
         inc     dx
-        mov     byte ptr es:[bp], 00100000b
+        mov     byte [es:bp], 00100000b
 
 convert_next:
         xor     ax, ax
@@ -129,20 +124,20 @@ break_ok_1:
         shr     bx, 1
         pushf
         shr     bx, 1
-        rcr     byte ptr es:[bp], 1
+        rcr     byte [es:bp], 1
         popf
-        rcr     byte ptr es:[bp], 1
+        rcr     byte [es:bp], 1
         jnc     bp_ok
 
-        movzx   ax, byte ptr es:[bp]
+        movzx   ax, byte [es:bp]
         shr     ax, 2
         call    convert_to_ascii
-        mov     es:[bp], al
+        mov     [es:bp], al
 
         mov     bp, di
         inc     di
         inc     dx
-        mov     byte ptr es:[bp], 00100000b
+        mov     byte [es:bp], 00100000b
 
 bp_ok:
         pop     bx
@@ -159,19 +154,19 @@ bp_ok:
 break_ok_2:
         loop    convert_next
 
-        cmp     byte ptr es:[bp], 00100000b
+        cmp     byte [es:bp], 00100000b
         jne     rotate_into_place
-        mov     byte ptr es:[bp], '.'
+        mov     byte [es:bp], '.'
         jmp     conversion_done
 
 rotate_into_place:
-        shr     byte ptr es:[bp], 1
+        shr     byte [es:bp], 1
         jnc     rotate_into_place
 
-        movzx   ax, byte ptr es:[bp]
+        movzx   ax, byte [es:bp]
         shr     ax, 2
         call    convert_to_ascii
-        mov     es:[bp], al
+        mov     [es:bp], al
 
 conversion_done:
 
@@ -275,7 +270,3 @@ handler:
 HANDLER_SIZE equ $ - handler
 
 buffer:
-
-code ends
-
-end start

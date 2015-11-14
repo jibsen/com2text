@@ -20,3 +20,15 @@ to only contain x86 opcodes that happen to be text characters.
 
 There were a number of such tools around, and I wrote this one just to see
 how it was done.
+
+
+Usage
+-----
+
+You can assemble the sources using [NASM](http://www.nasm.us/):
+
+    nasm c2t1.asm -fbin -o c2t1.com
+    nasm c2t2.asm -fbin -o c2t2.com
+
+Note that recent versions of Windows no longer support running COM files, so
+you may need to use a virtual machine to actually use them.
