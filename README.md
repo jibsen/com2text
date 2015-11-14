@@ -25,8 +25,25 @@ Recently someone requested a decoder, so I dug out the source and wrote one,
 and figured I might as well put the source on GitHub.
 
 
-Usage
------
+Encoding
+--------
+
+`c2t1` transforms each byte into two characters by encoding 4 bit values in
+`[0..15]` as ASCII characters between `k` (0x6B) and `z` (0x7A).
+
+`c2t2` encodes 6 bit values into two distinct character ranges. Values in
+`[0..5]` are encoded as ASCII characters between `(` (0x28) and `-` (0x2D),
+and values in `[6..63]` as ASCII characters between `A` (0x41) and `z` (0x7A).
+
+The bottom two bits of three consecutive bytes are stored as a separate
+encoded 6 bit tag value.
+
+`handler1.asm` and `handler2.asm` contain commented source of the handler code
+which performs the decoding.
+
+
+How to Build
+------------
 
 You can assemble the encoder sources using [NASM](http://www.nasm.us/):
 
