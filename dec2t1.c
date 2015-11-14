@@ -107,7 +107,8 @@ decode(struct state *s)
 	}
 }
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
 	uint8_t src[256];
 	uint8_t dst[256];
