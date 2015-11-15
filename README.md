@@ -18,11 +18,11 @@ remains executable. This is done by encoding the bytes of the original file
 in a process similar to Base64, and adding a decoder that is carefully craftet
 to only contain x86 opcodes that happen to be text characters.
 
-There were a number of such tools around, and I wrote this one just to see
-how it was done.
+There were a number of such tools around, and I wrote this one back in 2000,
+just to see how it was done.
 
-Recently someone requested a decoder, so I dug out the source and wrote one,
-and figured I might as well put the source on GitHub.
+Recently someone requested a decoder, so I dug out the source and made one,
+and figured I might as well put it on GitHub.
 
 
 Encoding
