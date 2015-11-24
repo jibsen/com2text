@@ -116,7 +116,7 @@ main(int argc, char **argv)
 	FILE *infile = NULL;
 	FILE *outfile = NULL;
 	size_t n_read;
-	int res = EXIT_SUCCESS;
+	int res = EXIT_FAILURE;
 
 	if (argc < 3) {
 		printf("Syntax: dec2t1 <infile> <outfile>\n");
@@ -126,14 +126,12 @@ main(int argc, char **argv)
 	infile = fopen(argv[1], "rb");
 	if (infile == NULL) {
 		printf("ERR: unable to open input file\n");
-		res = EXIT_FAILURE;
 		goto out;
 	}
 
 	outfile = fopen(argv[2], "w+b");
 	if (outfile == NULL) {
 		printf("ERR: unable to open output file\n");
-		res = EXIT_FAILURE;
 		goto out;
 	}
 
@@ -144,7 +142,6 @@ main(int argc, char **argv)
 	if (n_read != ARRAY_SIZE(handler)
 	 || memcmp(src, handler, ARRAY_SIZE(handler)) != 0) {
 		printf("ERR: handler mismatch\n");
-		res = EXIT_FAILURE;
 		goto out;
 	}
 
@@ -156,18 +153,17 @@ main(int argc, char **argv)
 
 		if (decode(&s) == -1) {
 			printf("ERR: decode error\n");
-			res = EXIT_FAILURE;
 			goto out;
 		}
 
 		if (fwrite(dst, 1, s.dst_size, outfile) != s.dst_size) {
 			printf("ERR: error writing\n");
-			res = EXIT_FAILURE;
 			goto out;
 		}
 	}
 
 	printf("Everything appears to be okay.\n");
+	res = EXIT_SUCCESS;
 
 out:
 	if (outfile != NULL) {
