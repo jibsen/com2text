@@ -1,6 +1,6 @@
 
-MS-DOS COM to Text Converts
-===========================
+MS-DOS COM to Text Converters
+=============================
 
 Copyright 2000-2015 Joergen Ibsen
 
